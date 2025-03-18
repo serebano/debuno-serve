@@ -1,4 +1,4 @@
-import type { ENV, Servers, ServeModule, ServeOptions } from "./types.ts";
+import type { ENV, Servers, ServeModule, ServeOptions } from "./src/types.ts";
 
 const IS_DENO: boolean = navigator.userAgent.includes('Deno')
 const IS_BUN: boolean = navigator.userAgent.includes('Bun')
@@ -13,14 +13,15 @@ export const Env = (() => {
 })()
 
 type Serve = ServeModule<Servers[ENV]>
+export type Server = Servers[ENV]
 
-export const readDir: Serve['readDir'] = (...args) => import(`./${Env}.ts`).then(mod => mod.readDir(...args))
-export const readFile: Serve['readFile'] = (...args) => import(`./${Env}.ts`).then(mod => mod.readFile(...args))
-export const writeFile: Serve['writeFile'] = (...args) => import(`./${Env}.ts`).then(mod => mod.writeFile(...args))
+export const readDir: Serve['readDir'] = (...args) => import(`./src/${Env}.ts`).then(mod => mod.readDir(...args))
+export const readFile: Serve['readFile'] = (...args) => import(`./src/${Env}.ts`).then(mod => mod.readFile(...args))
+export const writeFile: Serve['writeFile'] = (...args) => import(`./src/${Env}.ts`).then(mod => mod.writeFile(...args))
 
 export async function serve<T extends ENV>(options: ServeOptions): Promise<Servers[T]> {
     const start = performance.now()
-    const serveModule = await import(`./${Env}.ts`) as ServeModule<Servers[T]>
+    const serveModule = await import(`./src/${Env}.ts`) as ServeModule<Servers[T]>
 
     return serveModule.serve({
         ...options,

@@ -2,7 +2,8 @@
     "name": "@debuno/serve",
     "version": "0.0.1",
     "exports": {
-        ".": "./src/mod.ts"
+        ".": "./src/mod.ts",
+        "./*": "./src/"
     },
     "imports": {
         "@whatwg-node/server": "npm:@whatwg-node/server"
