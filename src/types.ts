@@ -26,6 +26,9 @@ export type ServeOptions = {
     hostname?: string,
     onListen?: (addr: { port: number, hostname: string, url: URL }) => void,
     onError?: (error: Error) => void,
+    onClose?: (error?: any) => void,
     fetch: (request: Request, ...args: any[]) => Promise<Response> | Response,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    debug?: boolean,
+    [key: string]: any
 }

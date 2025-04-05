@@ -6,7 +6,7 @@ export const ENV = "deno" as const
 export function serve(options: ServeOptions): Deno.HttpServer {
     const { port, hostname } = options
 
-    return Deno.serve({
+    const server = Deno.serve({
         port,
         hostname,
         handler: options.fetch,
@@ -19,8 +19,17 @@ export function serve(options: ServeOptions): Deno.HttpServer {
             options.onError?.(error)
             return Response.json({ error: error.message }, { status: 500 })
         },
+
         signal: options.signal
     })
+
+    server.finished.then(() => {
+        options.onClose?.()
+    }).catch((error) => {
+        options.onClose?.(error)
+    })
+
+    return server
 }
 
 export function symlink(target: string, path: string): Promise<void> {
